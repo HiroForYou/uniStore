@@ -89,7 +89,7 @@ export default function ChatBox(props) {
                 value={messageBody}
                 onChange={(e) => setMessageBody(e.target.value)}
                 type="text"
-                placeholder="type message"
+                placeholder="escribe un mensaje"
               />
               <button type="submit">Enviar</button>
             </form>

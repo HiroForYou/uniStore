@@ -154,7 +154,7 @@ export default function ProductScreen(props) {
           <div>
             <h2 id="reviews">Reseñas</h2>
             {product.reviews.length === 0 && (
-              <MessageBox>There is no review</MessageBox>
+              <MessageBox>Este producto no tiene reseñas</MessageBox>
             )}
             <ul>
               {product.reviews.map((review) => (

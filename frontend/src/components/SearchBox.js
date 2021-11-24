@@ -1,37 +1,81 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import MicIcon from '@mui/icons-material/Mic';
+import MicNoneIcon from '@mui/icons-material/MicNone';
 import { IconButton } from '@mui/material';
+import SearchIcon from '@mui/icons-material/Search';
 import InputAdornment from '@mui/material/InputAdornment';
 import Input from '@mui/material/Input';
 import OutlinedInput from '@mui/material/OutlinedInput';
+import Divider from '@mui/material/Divider';
 import InputLabel from '@mui/material/InputLabel';
 import FormControl from '@mui/material/FormControl';
 import FilledInput from '@mui/material/FilledInput';
 import TextField from '@mui/material/TextField';
-import Visibility from '@mui/icons-material/Visibility';
-import VisibilityOff from '@mui/icons-material/VisibilityOff';
+
+const SpeechRecognition =
+  window.SpeechRecognition || window.webkitSpeechRecognition
+const mic = new SpeechRecognition()
+
+mic.continuous = true
+mic.interimResults = true
+mic.lang = 'es-US'
 
 export default function SearchBox(props) {
 
   const [name, setName] = useState('');
+  const [isListening, setIsListening] = useState(false)
 
-  const [values, setValues] = React.useState({
-    amount: '',
-    password: '',
-    weight: '',
-    weightRange: '',
-    showPassword: false,
-  });
+  useEffect(() => {
+    handleListen()
+  }, [isListening])
 
-  const handleChange = (prop) => (event) => {
-    setValues({ ...values, [prop]: event.target.value });
-  };
+  /* useEffect(() => {
+    setTimeout(() => {
+      if(isListening){
+        setIsListening(false);
+      }
+    }, 2000);
+  }, [isListening]) */
 
-  const handleClickShowPassword = () => {
-    setValues({
-      ...values,
-      showPassword: !values.showPassword,
-    });
+  const handleListen = () => {
+    if (isListening) {
+      mic.start()
+      setTimeout(() => {
+        if(isListening){
+          setIsListening(false);
+        }
+      }, 2500);
+
+      mic.onend = () => {
+        console.log('continuar..')
+        mic.start()
+      }
+
+
+    } else {
+      mic.stop()
+      mic.onend = () => {
+        console.log('Microfono detenido')
+      }
+    }
+    mic.onstart = () => {
+      console.log('Microfono encendido')
+    }
+
+    mic.onresult = event => {
+      const transcript = Array.from(event.results)
+        .map(result => result[0])
+        .map(result => result.transcript)
+        .join('')
+      console.log(transcript)
+      setName(transcript.replace(/[&\/\\#,+()$~%.'":*?<>{}]/g, ""))
+      mic.onerror = event => {
+        console.log(event.error)
+      }
+    }
+  }
+  const handleChange = (event) => {
+    setName(event.target.value);
   };
 
   const handleMouseDownPassword = (event) => {
@@ -55,46 +99,33 @@ export default function SearchBox(props) {
            <button className="primary" type="submit">
                <i className="fa fa-search"></i>
            </button>
-        
-         <OutlinedInput
-           name="q"
-           id="q"
-           placeholder="Comience su búsqueda"
-           onChange={(e) => setName(e.target.value)}
-           startAdornment={
-             <InputAdornment position="end">
-               <IconButton color="primary" aria-label="upload picture" component="span" edge="end">
-                 <MicIcon />
-               </IconButton>
-             </InputAdornment>
-           }
-         />
        </div>
-       
-       <div style="border: 1px solid #DDD;">
-           <IconButton color="primary" aria-label="upload picture" component="span">
-             <MicIcon/>
-           </IconButton>
-             <input style="border: none;"/>
-         </div> 
      </form> */
 
-    <FormControl sx={{ m: 1, width: '25ch' }} variant="filled">
-      <InputLabel htmlFor="filled-adornment-password">Password</InputLabel>
-      <FilledInput
-        id="filled-adornment-password"
-        type={true ? 'text' : 'password'}
-        //value={"nose"}
+    <FormControl sx={{ m: 0, width: '35ch' }} variant="filled">
+      {/* <InputLabel htmlFor="filled-adornment-password">Password</InputLabel> */}
+      <OutlinedInput
+        color="primary" focused
+        type='text'
+        value={name}
         onChange={handleChange}
         endAdornment={
           <InputAdornment position="end">
             <IconButton
-              aria-label="toggle password visibility"
-              onClick={handleClickShowPassword}
-              onMouseDown={handleMouseDownPassword}
+              onClick={submitHandler}
               edge="end"
             >
-              {true ? <VisibilityOff /> : <Visibility />}
+              <SearchIcon />
+            </IconButton>
+            <Divider sx={{ height: 35, m: 1.5 }} orientation="vertical" />
+            <IconButton
+              aria-label="toggle password visibility"
+              onClick={() => setIsListening(prevState => !prevState)}
+              /* onMouseDown={handleMouseDownPassword} */
+              edge="end"
+              className="primary"
+            >
+              {isListening ? <MicIcon /> : <MicNoneIcon />}
             </IconButton>
           </InputAdornment>
         }
