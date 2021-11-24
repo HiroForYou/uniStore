@@ -3,14 +3,10 @@ import MicIcon from '@mui/icons-material/Mic';
 import MicNoneIcon from '@mui/icons-material/MicNone';
 import { IconButton } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
-import InputAdornment from '@mui/material/InputAdornment';
-import Input from '@mui/material/Input';
+import InputAdornment from '@mui/material/InputAdornment'; 
 import OutlinedInput from '@mui/material/OutlinedInput';
 import Divider from '@mui/material/Divider';
-import InputLabel from '@mui/material/InputLabel';
 import FormControl from '@mui/material/FormControl';
-import FilledInput from '@mui/material/FilledInput';
-import TextField from '@mui/material/TextField';
 
 const SpeechRecognition =
   window.SpeechRecognition || window.webkitSpeechRecognition
@@ -28,14 +24,6 @@ export default function SearchBox(props) {
   useEffect(() => {
     handleListen()
   }, [isListening])
-
-  /* useEffect(() => {
-    setTimeout(() => {
-      if(isListening){
-        setIsListening(false);
-      }
-    }, 2000);
-  }, [isListening]) */
 
   const handleListen = () => {
     if (isListening) {
@@ -76,10 +64,6 @@ export default function SearchBox(props) {
   }
   const handleChange = (event) => {
     setName(event.target.value);
-  };
-
-  const handleMouseDownPassword = (event) => {
-    event.preventDefault();
   };
 
   const submitHandler = (e) => {
