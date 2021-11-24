@@ -10,7 +10,7 @@
 <p>Sistema de compras inteligente (uniStore)</p>
 </h2>
 
-## Levantar localmente 
+## Levantar localmente
 
 ### 1. Configurando MongoDB
 
