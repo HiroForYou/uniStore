@@ -1,3 +1,15 @@
+<p align="center">
+    <br>
+    <a href="https://github.com/HiroForYou/uniStore">
+    <img src="uploads/favicon.svg" width="400"/>
+    </a>
+    <br>
+</p>
+
+<h2 align="center">
+<p>Sistema de compras inteligente (uniStore)</p>
+</h2>
+
 ## Levantar localmente
 
 ### 1. Configurando MongoDB
