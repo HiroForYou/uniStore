@@ -34,6 +34,7 @@ export default function ChatBox(props) {
         setMessages([...messages, { body: data.body, name: data.name }]);
       });
     }
+    // eslint-disable-next-line
   }, [messages, isOpen, socket]);
 
   const supportHandler = () => {

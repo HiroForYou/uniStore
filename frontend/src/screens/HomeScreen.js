@@ -1,15 +1,16 @@
-import React, { useEffect } from 'react';
-import 'react-responsive-carousel/lib/styles/carousel.min.css';
-import { Carousel } from 'react-responsive-carousel';
-import Product from '../components/Product';
-import LoadingBox from '../components/LoadingBox';
-import MessageBox from '../components/MessageBox';
-import { useDispatch, useSelector } from 'react-redux';
-import { listProducts } from '../actions/productActions';
-import { listTopSellers } from '../actions/userActions';
-import { Link } from 'react-router-dom';
+import React, { useEffect } from "react";
+import "react-responsive-carousel/lib/styles/carousel.min.css";
+import { Carousel } from "react-responsive-carousel";
+import Product from "../components/Product";
+import LoadingBox from "../components/LoadingBox";
+import MessageBox from "../components/MessageBox";
+import { useDispatch, useSelector } from "react-redux";
+import { listProducts } from "../actions/productActions";
+import { listTopSellers } from "../actions/userActions";
+import { Link } from "react-router-dom";
 
 export default function HomeScreen() {
+  
   const dispatch = useDispatch();
   const productList = useSelector((state) => state.productList);
   const { loading, error, products } = productList;
@@ -26,38 +27,81 @@ export default function HomeScreen() {
     dispatch(listTopSellers());
   }, [dispatch]);
   return (
-    <div>
-      <h2>Vendedores Top</h2>
+    <div className="div-home-screen">
+      {/* <p className="title">Ofertas Epicas Diarias</p>
+      <img
+        className="nodoNavi"
+        src="https://3.bp.blogspot.com/-_nSzMH7NsOQ/VFvIi66g4yI/AAAAAAAACYg/TIFYdxKe3Xk/s1600/A-navidad%2B-%2B9.png"
+        width="270"
+        height="300"
+      />
+      <img
+        className="nodoNavi"
+        src="https://3.bp.blogspot.com/-_nSzMH7NsOQ/VFvIi66g4yI/AAAAAAAACYg/TIFYdxKe3Xk/s1600/A-navidad%2B-%2B9.png"
+        width="270"
+        height="300"
+      />
+      <img
+        className="nodoNavi"
+        src="https://3.bp.blogspot.com/-_nSzMH7NsOQ/VFvIi66g4yI/AAAAAAAACYg/TIFYdxKe3Xk/s1600/A-navidad%2B-%2B9.png"
+        width="270"
+        height="300"
+      />
+      <img
+        className="nodoNavi"
+        src="https://3.bp.blogspot.com/-_nSzMH7NsOQ/VFvIi66g4yI/AAAAAAAACYg/TIFYdxKe3Xk/s1600/A-navidad%2B-%2B9.png"
+        width="270"
+        height="300"
+      />
+      <img
+        className="nodoNavi"
+        src="https://3.bp.blogspot.com/-_nSzMH7NsOQ/VFvIi66g4yI/AAAAAAAACYg/TIFYdxKe3Xk/s1600/A-navidad%2B-%2B9.png"
+        width="270"
+        height="300"
+      />
+      <img
+        className="gorra"
+        src="https://3.bp.blogspot.com/-P8atDeiKSyU/TuvlBOuwIRI/AAAAAAAAAZY/aAoHltXuIKQ/s200/navidad-gorro.png"
+        width="100"
+        height="100"
+      /> */}
+      <h2 className="titulo1">Vendedores Top</h2>
       {loadingSellers ? (
-        <LoadingBox/>
+        <LoadingBox />
       ) : errorSellers ? (
         <MessageBox variant="danger">{errorSellers}</MessageBox>
       ) : (
         <>
-          {sellers.length === 0 && <MessageBox>Vendedor no encontrado</MessageBox>}
-          <Carousel showArrows autoPlay showThumbs={false}>
-            {sellers.map((seller) => (
-              <div key={seller._id}>
-                <Link to={`/seller/${seller._id}`}>
-                  <img src={seller.seller.logo} alt={seller.seller.name} />
-                  <p className="legend">{seller.seller.name}</p>
-                </Link>
-              </div>
-            ))}
-          </Carousel>
+          {sellers.length === 0 && (
+            <MessageBox>Vendedor no encontrado</MessageBox>
+          )}
+          <div className="topSell">
+            <Carousel showArrows autoPlay showThumbs={false}>
+              {sellers.map((seller) => (
+                <div key={seller._id}>
+                  <Link to={`/seller/${seller._id}`}>
+                    <img src={seller.seller.logo} alt={seller.seller.name} />
+                    <p className="legend">{seller.seller.name}</p>
+                  </Link>
+                </div>
+              ))}
+            </Carousel>
+          </div>
         </>
       )}
-      <h2>Características del producto</h2>
+      <h2 className="titulo1">Características del producto</h2>
       {loading ? (
-        <LoadingBox/>
+        <LoadingBox />
       ) : error ? (
         <MessageBox variant="danger">{error}</MessageBox>
       ) : (
         <>
-          {products.length === 0 && <MessageBox>Producto no encontrado</MessageBox>}
+          {products.length === 0 && (
+            <MessageBox>Producto no encontrado</MessageBox>
+          )}
           <div className="row center">
             {products.map((product) => (
-              <Product key={product._id} product={product}/>
+              <Product key={product._id} product={product} />
             ))}
           </div>
         </>

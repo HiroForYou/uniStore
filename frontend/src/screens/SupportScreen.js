@@ -73,6 +73,7 @@ export default function SupportScreen() {
         setMessages(allMessages);
       });
     }
+    // eslint-disable-next-line
   }, [messages, socket, users]);
 
   const selectUser = (user) => {

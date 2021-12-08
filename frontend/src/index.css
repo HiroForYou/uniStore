@@ -18,9 +18,9 @@ body {
 .grid-container {
   display: grid;
   grid-template-areas:
-    'header'
-    'main'
-    'footer';
+    "header"
+    "main"
+    "footer";
   grid-template-columns: 1fr;
   grid-template-rows: 5rem 1fr 5rem;
   height: 100%;
@@ -85,7 +85,7 @@ button:hover {
   border: 0.1rem #404040 solid;
 }
 button.primary {
-  background-color: #ECE200;
+  background-color: #ece200;
 }
 button.block {
   width: 100%;
@@ -466,4 +466,42 @@ img.large {
 }
 .support-users .unread {
   background-color: #f02020;
+}
+
+.div-home-screen{
+ /*  position: relative;
+  bottom: 60px; 
+  height: 1500px; 
+  background-color: rgb(163, 221, 96);
+*/
+}
+.title {
+  position: relative;
+  text-align: center;
+  font-size: 50px;
+  font-family: cursive;
+  top: 30px;
+}
+.nodo {
+  position: relative;
+  left: 700px;
+}
+
+.gorra {
+  position: relative;
+  bottom: 310px;
+  right: 370px;
+}
+.titulo1 {
+  font-size: 20px;
+}
+
+.titulo{
+  text-align: center;
+  font-size: 25px;
+}
+.gorraNa{
+  position: relative;
+  left: 1000px;
+  top: 75px;
 }

@@ -1,11 +1,18 @@
-import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
-import { createReview, detailsProduct } from '../actions/productActions';
-import LoadingBox from '../components/LoadingBox';
-import MessageBox from '../components/MessageBox';
-import Rating from '../components/Rating';
-import { PRODUCT_REVIEW_CREATE_RESET } from '../constants/productConstants';
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Link } from "react-router-dom";
+
+import {
+  createReview,
+  detailsProduct,
+  recommendedProducts,
+} from "../actions/productActions";
+import Product from "../components/Product";
+import LoadingBox from "../components/LoadingBox";
+import MessageBox from "../components/MessageBox";
+import Rating from "../components/Rating";
+import useAlgoliaInsights from "../hooks/useAlgoliaInsights.js";
+import { PRODUCT_REVIEW_CREATE_RESET } from "../constants/productConstants";
 
 export default function ProductScreen(props) {
   const dispatch = useDispatch();
@@ -15,8 +22,12 @@ export default function ProductScreen(props) {
   const { loading, error, product } = productDetails;
   const userSignin = useSelector((state) => state.userSignin);
   const { userInfo } = userSignin;
+  const { sendProductView } = useAlgoliaInsights();
 
   const productReviewCreate = useSelector((state) => state.productReviewCreate);
+  const productRecommendedList = useSelector(
+    (state) => state.productRecommendedList
+  );
   const {
     loading: loadingReviewCreate,
     error: errorReviewCreate,
@@ -24,17 +35,32 @@ export default function ProductScreen(props) {
   } = productReviewCreate;
 
   const [rating, setRating] = useState(0);
-  const [comment, setComment] = useState('');
+  const [comment, setComment] = useState("");
 
   useEffect(() => {
     if (successReviewCreate) {
-      window.alert('Review Submitted Successfully');
-      setRating('');
-      setComment('');
+      window.alert("Reseña hecha con éxito");
+      setRating("");
+      setComment("");
       dispatch({ type: PRODUCT_REVIEW_CREATE_RESET });
     }
     dispatch(detailsProduct(productId));
   }, [dispatch, productId, successReviewCreate]);
+
+  useEffect(() => {
+    if (productId) sendProductView(productId);
+  }, []);
+
+  useEffect(() => {
+    dispatch(
+      recommendedProducts({
+        productId: productId,
+        times: 5,
+      })
+    );
+    //console.log(productRecommendedList)
+  }, [productId]);
+
   const addToCartHandler = () => {
     props.history.push(`/cart/${productId}?qty=${qty}`);
   };
@@ -45,13 +71,13 @@ export default function ProductScreen(props) {
         createReview(productId, { rating, comment, name: userInfo.name })
       );
     } else {
-      alert('Por favor ingrese una reseña o puntuación');
+      alert("Por favor ingrese una reseña o puntuación");
     }
   };
   return (
     <div>
       {loading ? (
-        <LoadingBox/>
+        <LoadingBox />
       ) : error ? (
         <MessageBox variant="danger">{error}</MessageBox>
       ) : (
@@ -59,11 +85,7 @@ export default function ProductScreen(props) {
           <Link to="/">Volver a resultados</Link>
           <div className="row top">
             <div className="col-2">
-              <img
-                className="large"
-                src={product.image}
-                alt={product.name}
-              />
+              <img className="large" src={product.image} alt={product.name} />
             </div>
             <div className="col-1">
               <ul>
@@ -76,7 +98,7 @@ export default function ProductScreen(props) {
                     numReviews={product.numReviews}
                   />
                 </li>
-                <li>Precio : ${product.price}</li>
+                <li>Precio : S/{product.price}</li>
                 <li>
                   Descripción:
                   <p>{product.description}</p>
@@ -87,7 +109,7 @@ export default function ProductScreen(props) {
               <div className="card card-body">
                 <ul>
                   <li>
-                    Vendedor{' '}
+                    Vendedor{" "}
                     <h2>
                       <Link to={`/seller/${product.seller._id}`}>
                         {product.seller.seller.name}
@@ -101,7 +123,7 @@ export default function ProductScreen(props) {
                   <li>
                     <div className="row">
                       <div>Precio</div>
-                      <div className="price">${product.price}</div>
+                      <div className="price">S/{product.price}</div>
                     </div>
                   </li>
                   <li>
@@ -160,7 +182,7 @@ export default function ProductScreen(props) {
               {product.reviews.map((review) => (
                 <li key={review._id}>
                   <strong>{review.name}</strong>
-                  <Rating rating={review.rating} caption=" "/>
+                  <Rating rating={review.rating} caption=" " />
                   <p>{review.createdAt.substring(0, 10)}</p>
                   <p>{review.comment}</p>
                 </li>
@@ -201,7 +223,7 @@ export default function ProductScreen(props) {
                       </button>
                     </div>
                     <div>
-                      {loadingReviewCreate && <LoadingBox/>}
+                      {loadingReviewCreate && <LoadingBox />}
                       {errorReviewCreate && (
                         <MessageBox variant="danger">
                           {errorReviewCreate}
@@ -211,12 +233,23 @@ export default function ProductScreen(props) {
                   </form>
                 ) : (
                   <MessageBox>
-                    Por favor <Link to="/signin">inicie sesión</Link>para escribir una reseña
+                    Por favor <Link to="/signin">inicie sesión</Link> para
+                    escribir una reseña
                   </MessageBox>
                 )}
               </li>
             </ul>
           </div>
+          <h2 id="recommended">Productos recomendados</h2>
+          {productRecommendedList.products ? (
+            <div className="row center">
+              {productRecommendedList.products.map((product) => (
+                <Product key={product._id} product={product} />
+              ))}
+            </div>
+          ) : (
+            ""
+          )}
         </div>
       )}
     </div>

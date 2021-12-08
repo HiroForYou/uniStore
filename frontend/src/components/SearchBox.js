@@ -23,6 +23,7 @@ export default function SearchBox(props) {
 
   useEffect(() => {
     handleListen()
+    // eslint-disable-next-line
   }, [isListening])
 
   const handleListen = () => {
@@ -56,7 +57,7 @@ export default function SearchBox(props) {
         .map(result => result.transcript)
         .join('')
       console.log(transcript)
-      setName(transcript.replace(/[&\/\\#,+()$~%.'":*?<>{}]/g, ""))
+      setName(transcript.replace(/[&\\#,+()$~%.'":*?<>{}]/g, ""))
       mic.onerror = event => {
         console.log(event.error)
       }
@@ -89,7 +90,7 @@ export default function SearchBox(props) {
     <FormControl sx={{ m: 0, width: '35ch' }} variant="filled">
       {/* <InputLabel htmlFor="filled-adornment-password">Password</InputLabel> */}
       <OutlinedInput
-        color="primary" focused
+        color="primary" //focused
         type='text'
         value={name}
         onChange={handleChange}
